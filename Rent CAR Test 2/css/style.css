@@ -1,5 +1,5 @@
 :root{
-  --bg:#14171A;
+  --bg:#14171A;      
   --surface:#1C2024;
   --surface-2:#23282D;
   --surface-3:#2B3137;
@@ -23,6 +23,7 @@
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
+
 body{
   background:
     radial-gradient(1200px 500px at 20% -10%, rgba(255,201,74,.05), transparent 60%),
@@ -41,7 +42,7 @@ a{color:var(--blue);}
 button{font-family:inherit;cursor:pointer;}
 input,select,textarea{font-family:inherit;}
 
-/* ===== Lane divider signature element ===== */
+/* ===== เส้นแบ่งส่วน ===== */
 .lane-divider{
   height:3px;
   width:100%;
@@ -51,7 +52,7 @@ input,select,textarea{font-family:inherit;}
   margin:28px 0;
 }
 
-/* ===== Top sign nav ===== */
+/* ===== แถบเมนูด้านบน ===== */
 .signpost{
   position:sticky; top:0; z-index:50;
   background:linear-gradient(180deg, #171A1D 0%, #14171A 100%);
@@ -88,6 +89,7 @@ input,select,textarea{font-family:inherit;}
   padding:9px 16px; border-radius:999px; font-size:14px; font-weight:600;
   transition:.15s;
 }
+/* ===== ปุ่ม ===== */
 .btn:hover{ background:var(--surface-3); }
 .btn-primary{ background:var(--amber); color:#14171A; border-color:var(--amber); }
 .btn-primary:hover{ background:var(--amber-dark); }
@@ -101,7 +103,7 @@ input,select,textarea{font-family:inherit;}
 .pagehead h1{ font-size:28px; margin:0 0 6px; }
 .pagehead p{ color:var(--text-muted); margin:0; font-size:14.5px; }
 
-/* ===== Gauge stat cards ===== */
+/* ===== สถานะรถ ===== */
 .gauges{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:22px 0 6px; }
 .gauge{
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
@@ -111,7 +113,7 @@ input,select,textarea{font-family:inherit;}
 .gauge .g-label{ font-size:12px; color:var(--text-muted); }
 .gauge .g-value{ font-size:22px; font-weight:700; font-family:'Space Mono',monospace; }
 
-/* ===== Cards / grid ===== */
+/* ===== ส่วนแสดงข้อมูลรถ ===== */
 .grid-cars{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px; margin-top:18px; }
 .car-card{
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
@@ -154,7 +156,7 @@ input,select,textarea{font-family:inherit;}
 .car-price .per{ font-size:11.5px; color:var(--text-faint); }
 .car-actions{ display:flex; gap:8px; margin-top:4px; }
 
-/* ===== Forms / cards ===== */
+/* ===== หน้าต่างแบบฟอร์ม ===== */
 .panel{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px; }
 .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
 .form-row.single{ grid-template-columns:1fr; }
@@ -169,42 +171,42 @@ input:focus,select:focus,textarea:focus{ border-color:var(--amber); }
 .error-box{ background:var(--red-dim); border:1px solid #4a2229; color:#ffb2ba; padding:10px 14px; border-radius:var(--radius-sm); font-size:13.5px; margin-bottom:14px; }
 .success-box{ background:var(--green-dim); border:1px solid #1f4a34; color:#9CF0C6; padding:10px 14px; border-radius:var(--radius-sm); font-size:13.5px; margin-bottom:14px; }
 
-/* ===== Auth ===== */
+/* ===== หน้าการเข้าสู่ระบบ ===== */
 .auth-wrap{ max-width:420px; margin:60px auto; }
 .auth-toggle{ display:flex; gap:6px; margin-bottom:20px; background:var(--surface-2); padding:4px; border-radius:999px; }
 .auth-toggle button{ flex:1; border:none; background:transparent; color:var(--text-muted); padding:9px; border-radius:999px; font-weight:600; font-size:13.5px; }
 .auth-toggle button.active{ background:var(--amber); color:#14171A; }
 
-/* ===== Table ===== */
+/* ===== ตาราง ===== */
 table{ width:100%; border-collapse:collapse; font-size:13.5px; }
 th{ text-align:left; color:var(--text-muted); font-weight:600; font-size:12px; padding:10px 12px; border-bottom:1px solid var(--line); }
 td{ padding:12px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
 tr:last-child td{ border-bottom:none; }
 
-/* ===== Price breakdown ===== */
+/* ===== รายละเอียดราคา ===== */
 .breakdown{ background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:14px 16px; margin-top:6px; }
 .brow{ display:flex; justify-content:space-between; font-size:13.5px; padding:5px 0; color:var(--text-muted); }
 .brow.total{ color:var(--text); font-weight:700; font-size:16px; border-top:1px dashed var(--line); margin-top:6px; padding-top:10px; }
 .brow .plus{ color:var(--green); }
 .brow .minus{ color:var(--amber); }
 
-/* ===== Promo badge ===== */
+/* ===== หน้าโปรโมชั่น ===== */
 .promo-card{ background:linear-gradient(135deg, var(--surface-3), var(--surface-2)); border:1px solid var(--line); border-radius:var(--radius); padding:18px; position:relative; overflow:hidden; }
 .promo-card::before{ content:""; position:absolute; right:-30px; top:-30px; width:100px; height:100px; background:radial-gradient(circle, rgba(255,201,74,.18), transparent 70%); }
 .promo-card h3{ margin:0 0 6px; font-size:17px; color:var(--amber); }
 .promo-card p{ margin:0; color:var(--text-muted); font-size:13.5px; line-height:1.6; }
 .promo-badge{ display:inline-block; margin-top:10px; font-family:'Space Mono',monospace; font-size:12px; background:var(--amber); color:#14171A; padding:3px 10px; border-radius:6px; font-weight:700; }
 
-/* ===== Empty state ===== */
+/* ===== หน้าที่ว่าง ===== */
 .empty{ text-align:center; padding:50px 20px; color:var(--text-faint); }
 .empty svg{ opacity:.4; margin-bottom:10px; }
 
-/* ===== Tabs (secondary) ===== */
+/* ===== หน้าต่างอื่นๆ ===== */
 .subtabs{ display:flex; gap:8px; margin:18px 0; flex-wrap:wrap; }
 .subtab{ background:var(--surface-2); border:1px solid var(--line); color:var(--text-muted); padding:8px 14px; border-radius:999px; font-size:13px; font-weight:600; }
 .subtab.active{ background:var(--surface-3); color:var(--text); border-color:var(--amber); }
 
-/* ===== QR box ===== */
+/* ===== หน้า QR Code ===== */
 .qr-box{ display:flex; flex-direction:column; align-items:center; gap:12px; padding:20px; }
 .qr-image{ width:200px; height:200px; background:#fff; border-radius:8px; padding:8px; }
 
@@ -215,7 +217,7 @@ tr:last-child td{ border-bottom:none; }
 
 .footer-note{ text-align:center; color:var(--text-faint); font-size:12px; margin-top:60px; padding-top:20px; border-top:1px solid var(--line-soft); }
 
-/* ===== Tracker Map Mockup ===== */
+/* ===== ระบบติดตาม/แมพ ===== */
 .map-container { position:relative; width:100%; height:320px; background:#242f3e; border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--line); margin-top:12px; }
 .map-iframe { width:100%; height:100%; border:none; }
 .rider-info-overlay { position:absolute; bottom:12px; left:12px; right:12px; background:rgba(28,32,36,0.95); border:1px solid var(--line); padding:12px; border-radius:8px; display:flex; align-items:center; justify-content:space-between; }
