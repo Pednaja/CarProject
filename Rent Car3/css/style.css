@@ -1,0 +1,228 @@
+:root{
+  --bg:#14171A;      
+  --surface:#1C2024;
+  --surface-2:#23282D;
+  --surface-3:#2B3137;
+  --line:#33393F;
+  --line-soft:#282E33;
+  --amber:#FFC94A;
+  --amber-dark:#E0A82E;
+  --blue:#5AAAFF;
+  --text:#F2F3F4;
+  --text-muted:#9AA3AB;
+  --text-faint:#6B7278;
+  --green:#3ECF8E;
+  --green-dim:#1E3A2D;
+  --orange:#FF9A4D;
+  --orange-dim:#3A2C1E;
+  --red:#FF5C6C;
+  --red-dim:#3A1E22;
+  --blue-dim:#1E2A3A;
+  --radius:14px;
+  --radius-sm:8px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+
+body{
+  background:
+    radial-gradient(1200px 500px at 20% -10%, rgba(255,201,74,.05), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(90,170,255,.05), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans Thai','Space Mono',sans-serif;
+  min-height:100vh;
+}
+h1,h2,h3,h4,.display{
+  font-family:'Kanit','Noto Sans Thai',sans-serif;
+  letter-spacing:.2px;
+}
+.num{ font-family:'Space Mono', monospace; }
+a{color:var(--blue);}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+
+/* ===== เส้นแบ่งส่วน ===== */
+.lane-divider{
+  height:3px;
+  width:100%;
+  background-image:repeating-linear-gradient(90deg, var(--amber) 0 22px, transparent 22px 40px);
+  opacity:.55;
+  border-radius:2px;
+  margin:28px 0;
+}
+
+/* ===== แถบเมนูด้านบน ===== */
+.signpost{
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(180deg, #171A1D 0%, #14171A 100%);
+  border-bottom:1px solid var(--line);
+  padding:0 20px;
+}
+.signpost-inner{
+  max-width:1180px; margin:0 auto;
+  display:flex; align-items:center; gap:18px;
+  height:64px;
+}
+.brand{
+  display:flex; align-items:center; gap:10px;
+  font-weight:800; font-size:20px; color:var(--text);
+  white-space:nowrap;
+}
+.brand .plate-dot{
+  width:10px;height:10px;border-radius:2px;background:var(--amber);
+  box-shadow:0 0 12px rgba(255,201,74,.7);
+}
+.navtabs{ display:flex; gap:6px; flex:1; overflow-x:auto; }
+.navtab{
+  border:1px solid transparent; background:transparent; color:var(--text-muted);
+  padding:9px 14px; border-radius:999px; font-size:14px; font-weight:600;
+  white-space:nowrap; transition:.15s;
+}
+.navtab:hover{ color:var(--text); background:var(--surface-2); }
+.navtab.active{ color:#14171A; background:var(--amber); }
+.navuser{ display:flex; align-items:center; gap:10px; white-space:nowrap; }
+.navuser .who{ font-size:13px; color:var(--text-muted); }
+.navuser .who b{ color:var(--text); }
+.btn{
+  border:1px solid var(--line); background:var(--surface-2); color:var(--text);
+  padding:9px 16px; border-radius:999px; font-size:14px; font-weight:600;
+  transition:.15s;
+}
+/* ===== ปุ่ม ===== */
+.btn:hover{ background:var(--surface-3); }
+.btn-primary{ background:var(--amber); color:#14171A; border-color:var(--amber); }
+.btn-primary:hover{ background:var(--amber-dark); }
+.btn-ghost{ background:transparent; border-color:var(--line); }
+.btn-danger{ background:var(--red-dim); color:var(--red); border-color:#4a2229; }
+.btn-sm{ padding:6px 12px; font-size:12.5px; }
+.btn:disabled{ opacity:.4; cursor:not-allowed; }
+
+.wrap{ max-width:1180px; margin:0 auto; padding:32px 20px 80px; }
+.pagehead{ margin-bottom:6px; }
+.pagehead h1{ font-size:28px; margin:0 0 6px; }
+.pagehead p{ color:var(--text-muted); margin:0; font-size:14.5px; }
+
+/* ===== สถานะรถ ===== */
+.gauges{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:22px 0 6px; }
+.gauge{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:16px; display:flex; align-items:center; gap:14px;
+}
+.gauge svg{ flex-shrink:0; }
+.gauge .g-label{ font-size:12px; color:var(--text-muted); }
+.gauge .g-value{ font-size:22px; font-weight:700; font-family:'Space Mono',monospace; }
+
+/* ===== ส่วนแสดงข้อมูลรถ ===== */
+.grid-cars{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px; margin-top:18px; }
+.car-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.car-top{
+  height:150px; position:relative; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(160deg, var(--surface-3), var(--surface-2));
+  border-bottom:1px dashed var(--line);
+}
+.car-img{ width:100%; height:100%; object-fit:cover; }
+.no-image{ color:var(--text-faint); font-size:13px; }
+.plate{
+  position:absolute; top:10px; right:10px; z-index:2;
+  background:#F4D35E; color:#151515; border:2px solid #151515;
+  border-radius:5px; padding:2px 7px; font-family:'Space Mono',monospace;
+  font-size:11px; font-weight:700; letter-spacing:.5px;
+}
+.status-chip{
+  position:absolute; top:10px; left:10px; z-index:2;
+  border-radius:999px; padding:4px 10px; font-size:11px; font-weight:700;
+  display:flex; align-items:center; gap:5px;
+}
+.status-chip .dot{ width:6px;height:6px;border-radius:50%; }
+.status-available{ background:var(--green-dim); color:var(--green); }
+.status-available .dot{ background:var(--green); }
+.status-reserved{ background:var(--blue-dim); color:var(--blue); }
+.status-reserved .dot{ background:var(--blue); }
+.status-rented{ background:var(--red-dim); color:var(--red); }
+.status-rented .dot{ background:var(--red); }
+.status-maintenance{ background:var(--orange-dim); color:var(--orange); }
+.status-maintenance .dot{ background:var(--orange); }
+
+.car-body{ padding:14px 16px 16px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.car-body h3{ margin:0; font-size:16.5px; }
+.car-meta{ display:flex; flex-wrap:wrap; gap:6px; }
+.tag{ font-size:11px; color:var(--text-muted); background:var(--surface-2); border:1px solid var(--line); padding:3px 8px; border-radius:6px; }
+.car-price{ margin-top:auto; display:flex; align-items:baseline; justify-content:space-between; padding-top:8px; border-top:1px solid var(--line-soft); }
+.car-price .amt{ font-family:'Space Mono',monospace; font-size:19px; font-weight:700; color:var(--amber); }
+.car-price .per{ font-size:11.5px; color:var(--text-faint); }
+.car-actions{ display:flex; gap:8px; margin-top:4px; }
+
+/* ===== หน้าต่างแบบฟอร์ม ===== */
+.panel{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px; }
+.form-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+.form-row.single{ grid-template-columns:1fr; }
+.form-row.three{ grid-template-columns:1fr 1fr 1fr; }
+label{ display:block; font-size:12.5px; color:var(--text-muted); margin-bottom:6px; font-weight:600; }
+input[type=text],input[type=email],input[type=password],input[type=date],input[type=time],input[type=tel],input[type=number],select,textarea{
+  width:100%; background:var(--surface-2); border:1px solid var(--line); color:var(--text);
+  padding:10px 12px; border-radius:var(--radius-sm); font-size:14px; outline:none;
+}
+input:focus,select:focus,textarea:focus{ border-color:var(--amber); }
+.hint{ font-size:12px; color:var(--text-faint); margin-top:4px; }
+.error-box{ background:var(--red-dim); border:1px solid #4a2229; color:#ffb2ba; padding:10px 14px; border-radius:var(--radius-sm); font-size:13.5px; margin-bottom:14px; }
+.success-box{ background:var(--green-dim); border:1px solid #1f4a34; color:#9CF0C6; padding:10px 14px; border-radius:var(--radius-sm); font-size:13.5px; margin-bottom:14px; }
+
+/* ===== หน้าการเข้าสู่ระบบ ===== */
+.auth-wrap{ max-width:420px; margin:60px auto; }
+.auth-toggle{ display:flex; gap:6px; margin-bottom:20px; background:var(--surface-2); padding:4px; border-radius:999px; }
+.auth-toggle button{ flex:1; border:none; background:transparent; color:var(--text-muted); padding:9px; border-radius:999px; font-weight:600; font-size:13.5px; }
+.auth-toggle button.active{ background:var(--amber); color:#14171A; }
+
+/* ===== ตาราง ===== */
+table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+th{ text-align:left; color:var(--text-muted); font-weight:600; font-size:12px; padding:10px 12px; border-bottom:1px solid var(--line); }
+td{ padding:12px; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+tr:last-child td{ border-bottom:none; }
+
+/* ===== รายละเอียดราคา ===== */
+.breakdown{ background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm); padding:14px 16px; margin-top:6px; }
+.brow{ display:flex; justify-content:space-between; font-size:13.5px; padding:5px 0; color:var(--text-muted); }
+.brow.total{ color:var(--text); font-weight:700; font-size:16px; border-top:1px dashed var(--line); margin-top:6px; padding-top:10px; }
+.brow .plus{ color:var(--green); }
+.brow .minus{ color:var(--amber); }
+
+/* ===== หน้าโปรโมชั่น ===== */
+.promo-card{ background:linear-gradient(135deg, var(--surface-3), var(--surface-2)); border:1px solid var(--line); border-radius:var(--radius); padding:18px; position:relative; overflow:hidden; }
+.promo-card::before{ content:""; position:absolute; right:-30px; top:-30px; width:100px; height:100px; background:radial-gradient(circle, rgba(255,201,74,.18), transparent 70%); }
+.promo-card h3{ margin:0 0 6px; font-size:17px; color:var(--amber); }
+.promo-card p{ margin:0; color:var(--text-muted); font-size:13.5px; line-height:1.6; }
+.promo-badge{ display:inline-block; margin-top:10px; font-family:'Space Mono',monospace; font-size:12px; background:var(--amber); color:#14171A; padding:3px 10px; border-radius:6px; font-weight:700; }
+
+/* ===== หน้าที่ว่าง ===== */
+.empty{ text-align:center; padding:50px 20px; color:var(--text-faint); }
+.empty svg{ opacity:.4; margin-bottom:10px; }
+
+/* ===== หน้าต่างอื่นๆ ===== */
+.subtabs{ display:flex; gap:8px; margin:18px 0; flex-wrap:wrap; }
+.subtab{ background:var(--surface-2); border:1px solid var(--line); color:var(--text-muted); padding:8px 14px; border-radius:999px; font-size:13px; font-weight:600; }
+.subtab.active{ background:var(--surface-3); color:var(--text); border-color:var(--amber); }
+
+/* ===== หน้า QR Code ===== */
+.qr-box{ display:flex; flex-direction:column; align-items:center; gap:12px; padding:20px; }
+.qr-image{ width:200px; height:200px; background:#fff; border-radius:8px; padding:8px; }
+
+.toast-wrap{ position:fixed; bottom:20px; right:20px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+.toast{ background:var(--surface-3); border:1px solid var(--line); border-left:4px solid var(--green); color:var(--text); padding:12px 18px; border-radius:var(--radius-sm); font-size:13.5px; box-shadow:0 8px 24px rgba(0,0,0,.4); animation:slidein .2s ease; max-width:320px; }
+.toast.err{ border-left-color:var(--red); }
+@keyframes slidein{ from{ transform:translateX(20px); opacity:0; } to{ transform:translateX(0); opacity:1; } }
+
+.footer-note{ text-align:center; color:var(--text-faint); font-size:12px; margin-top:60px; padding-top:20px; border-top:1px solid var(--line-soft); }
+
+/* ===== ระบบติดตาม/แมพ ===== */
+.map-container { position:relative; width:100%; height:320px; background:#242f3e; border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--line); margin-top:12px; }
+.map-iframe { width:100%; height:100%; border:none; }
+.rider-info-overlay { position:absolute; bottom:12px; left:12px; right:12px; background:rgba(28,32,36,0.95); border:1px solid var(--line); padding:12px; border-radius:8px; display:flex; align-items:center; justify-content:space-between; }
+
+@media(max-width:640px){
+  .form-row, .form-row.three{ grid-template-columns:1fr; }
+  .navuser .who{ display:none; }
+}
