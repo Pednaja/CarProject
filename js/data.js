@@ -4,10 +4,10 @@ window.App = window.App || {};
   let uid = 100;
   App.nextId = (prefix) => prefix + '-' + (++uid);
 
-  // เลขพร้อมเพย์ สามารถเปลี่ยนเป็นเบอร์ได้
+  // เลขพร้อมเพย์ (สามารถเปลี่ยนเป็นเบอร์ของคุณได้)
   App.PROMPTPAY_NUMBER = '0800000000';
 
-
+  // ผู้ใช้เริ่มต้น (ใช้ตอนที่ยังไม่เคยมีข้อมูลใน localStorage เลย)
   const defaultUsers = [
     { id: 'u-1', name: 'ผู้ดูแลระบบ', email: 'admin@gmail.com', password: 'admin123', phone: '0800000000', idCard: '1234567890123', role: 'admin', isNewMember: false, joinedAt: '2024-01-01' }
   ];
@@ -33,6 +33,9 @@ window.App = window.App || {};
     contracts: [],
     payments: [],
 
+    // โปรโมชั่นในระบบ — เงื่อนไข "ใช้ได้เฉพาะการจองครั้งแรกของผู้ใช้แต่ละคนเท่านั้น"
+    // ถูกบังคับใช้แบบรวมศูนย์ใน App.computePromotions (booking.js) ไม่ใช่ในตัว rule นี้
+    // เพื่อให้ทุกโปรโมชั่นอยู่ภายใต้กติกาเดียวกันเสมอ
     promotions: [
       { id: 'p1', code: 'WEEKLY10', name: 'เช่ายาว 7 วันขึ้นไป', desc: 'ลดทันที 10% เมื่อเช่ารถตั้งแต่ 7 วันขึ้นไป (ใช้ได้เฉพาะการจองครั้งแรกของสมาชิกเท่านั้น)', type: 'percent', value: 10, rule: (ctx) => ctx.days >= 7 },
       { id: 'p2', code: 'NEWMEMBER300', name: 'สมาชิกใหม่', desc: 'ลด 300 บาท สำหรับการจองครั้งแรกของสมาชิกใหม่', type: 'fixed', value: 300, rule: (ctx) => ctx.isNewMember }

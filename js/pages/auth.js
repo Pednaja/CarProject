@@ -2,154 +2,134 @@
    หน้าต่าง login และ Regis 
    ============================ */
 (function (App) {
-  const { el, state, toast, setTab, nextId } = App;
+  const { el, state, toast, setTab, nextId } = App; //
 
   App.renderAuth = function renderAuth() {
-    const wrap = el(`<div class="wrap"><div class="auth-wrap"></div></div>`);
-    const box = wrap.querySelector('.auth-wrap');
-    const mode = state.ui.authMode;
+    const wrap = el(`<div class="wrap"><div class="auth-wrap"></div></div>`); //[cite: 6]
+    const box = wrap.querySelector('.auth-wrap'); //[cite: 6]
+    const mode = state.ui.authMode; //[cite: 6]
 
     box.appendChild(el(`
       <div class="auth-toggle">
         <button data-m="login" class="${mode === 'login' ? 'active' : ''}">เข้าสู่ระบบ</button>
         <button data-m="register" class="${mode === 'register' ? 'active' : ''}">สมัครสมาชิก</button>
-      </div>`));
-    box.querySelectorAll('.auth-toggle button').forEach(b => b.addEventListener('click', () => { state.ui.authMode = b.dataset.m; App.render(); }));
+      </div>`)); //[cite: 6]
+    box.querySelectorAll('.auth-toggle button').forEach(b => b.addEventListener('click', () => { state.ui.authMode = b.dataset.m; App.render(); })); //[cite: 6]
 
-    const panel = el(`<div class="panel"></div>`);
-    box.appendChild(panel);
+    const panel = el(`<div class="panel"></div>`); //[cite: 6]
+    box.appendChild(panel); //[cite: 6]
 
     if (mode === 'login') {
-      renderLoginForm(panel);
+      renderLoginForm(panel); //[cite: 6]
     } else {
-      renderRegisterForm(panel);
+      renderRegisterForm(panel); //[cite: 6]
     }
 
-    return wrap;
+    return wrap; //[cite: 6]
   };
 
-  
-  
-  
-  
   function renderLoginForm(panel) {
-  panel.innerHTML = ''; // เคลียร์พื้นที่กล่องเดิม
+    panel.appendChild(el(`
+      <h3 style="margin-top:0;">เข้าสู่ระบบสมาชิก</h3>
+      <div class="form-row single"><div><label>อีเมล (ต้องลงท้ายด้วย @gmail.com)</label><input type="email" id="loginEmail" placeholder="example@gmail.com"></div></div>
+      <div class="form-row single"><div><label>รหัสผ่าน</label><input type="password" id="loginPass" placeholder="••••••••"></div></div>
+      <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:6px;">เข้าสู่ระบบ</button>
+      <p class="hint" style="margin-top:14px;">ทดลองบัญชีแอดมิน: <b>admin@gmail.com</b> / <b>admin123</b></p>
+    `)); //[cite: 6]
 
-  //  สร้างโครงสร้างหน้าตาฟอร์ม Login
-  const form = el(`
-    <form class="auth-form">
-      <h2>เข้าสู่ระบบ</h2>
-      <div class="field">
-        <label>อีเมล</label>
-        <input type="email" name="email" placeholder="กรอกอีเมลของคุณ" required />
-      </div>
-      <div class="field">
-        <label>รหัสผ่าน</label>
-        <input type="password" name="password" placeholder="กรอกรหัสผ่าน" required />
-      </div>
-      <button type="submit" class="btn-primary">เข้าสู่ระบบ</button>
-    </form>
-  `);
+    // --- แก้ไขจุดที่ 1: Login ยิงไปเช็คใน MySQL ---
+    panel.querySelector('#loginBtn').addEventListener('click', async () => {
+      const email = panel.querySelector('#loginEmail').value.trim().toLowerCase();
+      const pass = panel.querySelector('#loginPass').value;
 
-  //  ผูก Event เมื่อกดปุ่ม เข้าสู่ระบบ เพื่อส่งข้อมูลไป MySQL
-  form.onsubmit = async function (e) {
-    e.preventDefault(); // กันหน้าเว็บรีเฟรช
-
-    const email = form.querySelector('[name="email"]').value;
-    const password = form.querySelector('[name="password"]').value;
-
-    try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        if (toast) toast('เข้าสู่ระบบสำเร็จ!', 'success');
-        
-        // บันทึกข้อมูลผู้ใช้ไว้ในเครื่อง
-        localStorage.setItem('currentUser', JSON.stringify(result.user));
-        state.currentUser = result.user;
-
-        // สลับไปหน้าเลือกดูรถ
-        setTab('cars');
-      } else {
-        if (toast) toast(result.message || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
+      if (!email.endsWith('@gmail.com')) {
+        toast('อีเมลเข้าสู่ระบบต้องลงท้ายด้วย @gmail.com เท่านั้น', true); //[cite: 6]
+        return;
       }
-    } catch (error) {
-      console.error('Login Error:', error);
-      if (toast) toast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
-    }
-  };
 
-  panel.appendChild(form);
-}
+      try {
+        const res = await fetch('http://localhost:5000/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password: pass })
+        });
 
-  
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'เข้าสู่ระบบไม่สำเร็จ');
+
+        state.currentUser = data; // บันทึกข้อมูล user ที่ตอบกลับมาจาก MySQL
+        toast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + data.name);
+        setTab('cars'); //[cite: 6]
+      } catch (err) {
+        toast(err.message, true);
+      }
+    });
+  }
 
   function renderRegisterForm(panel) {
-  panel.innerHTML = ''; // เคลียร์พื้นที่กล่องเดิม
+    panel.appendChild(el(`
+      <h3 style="margin-top:0;">สมัครสมาชิกใหม่</h3>
+      <div class="form-row"><div><label>ชื่อ-นามสกุล</label><input type="text" id="regName"></div>
+      <div><label>เบอร์โทรศัพท์ (10 หลัก)</label><input type="tel" id="regPhone" placeholder="08xxxxxxxx" maxlength="10"></div></div>
+      <div class="form-row"><div><label>อีเมล (ต้องใช้ @gmail.com)</label><input type="email" id="regEmail" placeholder="name@gmail.com"></div>
+      <div><label>เลขบัตรประชาชน (13 หลัก)</label><input type="text" id="regIdCard" placeholder="1234567890123" maxlength="13"></div></div>
+      <div class="form-row single"><div><label>รหัสผ่าน</label><input type="password" id="regPass"></div></div>
+      <button class="btn btn-primary" id="regBtn" style="width:100%;margin-top:6px;">สมัครสมาชิก</button>
+    `)); //[cite: 6]
 
-  // 🔹 สร้างโครงสร้างหน้าตาฟอร์ม สมัครสมาชิก
-  const form = el(`
-    <form class="auth-form">
-      <h2>สมัครสมาชิก</h2>
-      <div class="field">
-        <label>ชื่อ-นามสกุล</label>
-        <input type="text" name="name" placeholder="กรอกชื่อ-นามสกุล" required />
-      </div>
-      <div class="field">
-        <label>เบอร์โทรศัพท์</label>
-        <input type="tel" name="phone" placeholder="กรอกเบอร์โทรศัพท์" required />
-      </div>
-      <div class="field">
-        <label>อีเมล</label>
-        <input type="email" name="email" placeholder="กรอกอีเมลของคุณ" required />
-      </div>
-      <div class="field">
-        <label>รหัสผ่าน</label>
-        <input type="password" name="password" placeholder="กำหนดรหัสผ่าน" required />
-      </div>
-      <button type="submit" class="btn-primary">สมัครสมาชิก</button>
-    </form>
-  `);
+    // --- แก้ไขจุดที่ 2: Register บันทึกลง MySQL ---
+    panel.querySelector('#regBtn').addEventListener('click', async () => {
+      const name = panel.querySelector('#regName').value.trim();
+      const phone = panel.querySelector('#regPhone').value.trim();
+      const email = panel.querySelector('#regEmail').value.trim();
+      const idCard = panel.querySelector('#regIdCard').value.trim();
+      const pass = panel.querySelector('#regPass').value;
 
-  // 🔹 ผูก Event เมื่อกดปุ่ม สมัครสมาชิก
-  form.onsubmit = async function (e) {
-    e.preventDefault();
+      if (!name || !phone || !email || !idCard || !pass) { toast('กรุณากรอกข้อมูลให้ครบถ้วน', true); return; } //[cite: 6]
 
-    const name = form.querySelector('[name="name"]').value;
-    const phone = form.querySelector('[name="phone"]').value;
-    const email = form.querySelector('[name="email"]').value;
-    const password = form.querySelector('[name="password"]').value;
-
-    try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, email, password })
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        if (toast) toast('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ', 'success');
-        
-        // สลับแท็บกลับมาหน้า Login
-        state.ui.authMode = 'login';
-        App.renderAuth();
-      } else {
-        if (toast) toast(result.message || 'สมัครสมาชิกไม่สำเร็จ', 'error');
+      if (!/^\d{10}$/.test(phone)) {
+        toast('เบอร์โทรศัพท์ต้องเป็นตัวเลขความยาว 10 หลัก', true); //[cite: 6]
+        return;
       }
-    } catch (error) {
-      console.error('Register Error:', error);
-      if (toast) toast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
-    }
-  };
 
-  panel.appendChild(form);
-}
+      if (!/^\d{13}$/.test(idCard)) {
+        toast('เลขบัตรประชาชนต้องเป็นตัวเลขความยาว 13 หลัก', true); //[cite: 6]
+        return;
+      }
+
+      if (!email.toLowerCase().endsWith('@gmail.com')) {
+        toast('อีเมลที่ใช้สมัครต้องลงท้ายด้วย @gmail.com เท่านั้น', true); //[cite: 6]
+        return;
+      }
+
+      const newUser = {
+        id: nextId('u'),
+        name,
+        phone,
+        email,
+        idCard,
+        password: pass,
+        role: 'customer',
+        isNewMember: true,
+        joinedAt: new Date().toISOString().slice(0, 10)
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/api/users/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newUser)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'สมัครสมาชิกไม่สำเร็จ');
+
+        state.currentUser = newUser;
+        toast('สมัครสมาชิกสำเร็จ! ยินดีต้อนรับสู่ Rent Car');
+        setTab('cars'); //[cite: 6]
+      } catch (err) {
+        toast(err.message, true);
+      }
+    });
+  }
 })(window.App);

@@ -1,5 +1,7 @@
 /* =========================================================
-   เก็บข้อมูลบัญชีผู้ใช้ (email/password) 
+   storage.js — เก็บข้อมูลบัญชีผู้ใช้ (email/password) ลง localStorage
+   เพื่อให้เมื่อผู้ใช้กลับมาเปิดเว็บใหม่ (ปิด/เปิดเบราว์เซอร์ใหม่)
+   ยังสามารถ login ด้วยอีเมล/รหัสผ่านเดิมได้ โดยไม่ต้องสมัครซ้ำ
    ========================================================= */
 window.App = window.App || {};
 
@@ -21,6 +23,8 @@ window.App = window.App || {};
     }
   };
 
+  // บันทึกรายชื่อผู้ใช้ปัจจุบันทั้งหมดลง localStorage
+  // เรียกทุกครั้งหลังสมัครสมาชิกใหม่ หรือมีการแก้ไขข้อมูลผู้ใช้
   App.saveUsersToStorage = function saveUsersToStorage() {
     try {
       localStorage.setItem(USERS_KEY, JSON.stringify(App.state.users));

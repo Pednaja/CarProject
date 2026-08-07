@@ -3,9 +3,10 @@
    ========================================================= */
 (function (App) {
   const { el, state, money, daysBetween, nextId, toast, setTab } = App;
-  // ปรโมชั่น ใช้ได้เฉพาะ การจองครั้งแรก ของผู้ใช้แต่ละคนเท่านั้น (ต่อ 1 User)
+
+  // กติกาโปรโมชั่น: ใช้ได้เฉพาะ "การจองครั้งแรก" ของผู้ใช้แต่ละคนเท่านั้น (ต่อ 1 User)
   // เมื่อผู้ใช้เคยมีการจองมาก่อนหน้านี้แล้ว (ไม่ว่าจะจ่ายเงินแล้วหรือไม่ก็ตาม)
-  // จะไม่สามารถรับส่วนลดจากโปรโมชั่นได้
+  // จะไม่สามารถรับส่วนลดจากโปรโมชั่นใดๆ ได้อีก
   function computePromotions(user, days) {
     if (!user) return [];
     const isFirstBooking = state.bookings.filter(b => b.userId === user.id).length === 0;
@@ -132,47 +133,44 @@
     const pTime = panel.querySelector('#bkPickupTime').value;
     const rTime = panel.querySelector('#bkReturnTime').value;
 
-    const bookingData = {
-      userId: state.currentUser.id,
-      carId: car.id,
-      pickupDate: pDate,
-      pickupTime: pTime,
-      pickupLocation: pLoc,
-      returnDate: rDate,
-      returnTime: rTime,
-      returnLocation: rLoc,
-      days: days,
-      basePrice: base,
-      discount: discount,
-      total: total
+    const booking = {
+      id: nextId('bk'), userId: state.currentUser.id, carId: car.id,
+      pickupDate: pDate, pickupTime: pTime, pickupLocation: pLoc,
+      returnDate: rDate, returnTime: rTime, returnLocation: rLoc,
+      days, basePrice: base, discount, total,
+      status: 'confirmed', createdAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
     };
 
     try {
-      //ส่งข้อมูลไปบันทึกลง Database ผ่าน Backend API
-      const response = await fetch('http://localhost:3000/api/bookings', {
+      // บันทึกลง MySQL ผ่าน API
+      const res = await fetch('http://localhost:5000/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bookingData)
+        body: JSON.stringify(booking)
       });
 
-      const result = await response.json();
+      if (!res.ok) throw new Error('เกิดข้อผิดพลาดในการบันทึกการจอง');
 
-      if (result.success) {
-        // บันทึกสำเร็จ
-        if (toast) toast('จองรถสำเร็จ! กรุณาชำระเงิน', 'success');
+      // อัปเดตสถานะรถในเครื่อง
+      state.bookings.push(booking);
+      car.status = 'reserved';
+      if (promos.some(p => p.code === 'NEWMEMBER300')) state.currentUser.isNewMember = false;
 
-        // อัปเดตสถานะรถใน state ให้เป็น reserved ชั่วคราว
-        car.status = 'reserved';
+      const deposit = 1000;
+      const contract = {
+        id: nextId('ct'), bookingId: booking.id, carId: car.id, userId: state.currentUser.id,
+        customerName: state.currentUser.name, customerPhone: state.currentUser.phone, customerIdCard: state.currentUser.idCard,
+        deposit, rentalStart: pDate, rentalEnd: rDate, pickupLocation: pLoc, total,
+        status: 'pending_payment', createdAt: new Date().toISOString()
+      };
+      state.contracts.push(contract);
 
-        // เคลียร์ค่าค้าง และสลับไปหน้า "สัญญา/การชำระเงิน"
-        state.ui.bookingCarId = null;
-        setTab('contracts');
-      } else {
-        if (toast) toast(result.message || 'ไม่สามารถทำการจองได้', 'error');
-      }
-    } catch (error) {
-      console.error('Booking Error:', error);
-      if (toast) toast('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์', 'error');
+      toast('จองรถสำเร็จ! บันทึกลงฐานข้อมูลเรียบร้อย');
+      state.ui.bookingCarId = null;
+      setTab('contracts');
+    } catch (err) {
+      toast(err.message, true);
     }
   }
-})(window.App);
+  }
+)(window.App);
